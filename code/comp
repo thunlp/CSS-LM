@@ -1,0 +1,62 @@
+309c309
+< def AugmentationData_Domain(top_k, bottom_k, tokenizer, max_seq_length):
+---
+> def AugmentationData_Domain(bottom_k, top_k, tokenizer, max_seq_length):
+1222c1222
+<                         #target = torch.zeros(task_binary_logit.shape[0], task_binary_logit.shape[1], dtype=torch.long)
+---
+>                         #task_binary_logit = task_binary_logit[:,:,1] - task_binary_logit[:,:,0]
+1225a1226,1227
+>                         #print(query_domain_task.shape)
+>                         #print(docs_head.shape)
+1227a1230,1231
+>                         #target = torch.zeros(domain_task_binary_logit.shape[0], domain_task_binary_logit.shape[1], dtype=torch.long)
+>                         #domain_task_binary_logit = domain_task_binary_logit[:,:,1] - domain_task_binary_logit[:,:,0]
+1229d1232
+< 
+1238a1242
+>                         #bottom_k_all_type = torch.topk(results_all_type, k, dim=1, largest=False, sorted=False)
+1242a1247,1248
+>                         #domain_bottom_k_all_type_values = domain_binary_logit[:,domain_bottom_k_all_type_indices]
+>                         #domain_bottom_k_all_type_indices = torch.stack(args.train_batch_size*[domain_bottom_k_all_type_indices])
+1253a1260
+>                         #del domain_task_binary_logit
+1332a1340
+>                         #target = torch.zeros(domain_task_binary_logit.shape[0], domain_task_binary_logit.shape[1], dtype=torch.long)
+1346a1355,1358
+>                         #perm = torch.randperm(domain_binary_logit.shape[1])
+>                         #domain_bottom_k_indices = perm[:k]
+>                         #domain_bottom_k_values = domain_binary_logit[:,domain_bottom_k_indices]
+>                         #domain_bottom_k_indices = torch.stack(args.train_batch_size*[domain_bottom_k_indices])
+1360a1373
+>                         #del domain_task_binary_logit
+1404a1418
+>                 '''
+1446c1460
+<                         #docs_tail_head.index_copy_(0, indices, out_domain_rep_both)
+---
+>                         docs_tail_head.index_copy_(0, indices, out_domain_rep_both)
+1454c1468
+<                         #print("doc_t",docs_tail_head.shape)
+---
+>                         print("doc_t",docs_tail_head.shape)
+1455a1470
+>                 '''
+1461c1476
+<                 #Train Task Binary Classifier    in domain (CLS supervised)
+---
+>                 #Train Task Binary Classifier    in domain
+1583c1598,1599
+<                     loss = domain_binary_loss.mean() + task_binary_loss.mean() + task_loss_org.mean()*2 + domain_task_loss_query.mean() + task_loss_query.mean() #+ mlm_loss.mean()
+---
+>                     #loss = domain_binary_loss.mean() + task_binary_loss.mean() + task_loss_org.mean() + pseudo + domain_task_loss_query.mean() #+ mlm_loss.mean()
+>                     loss = task_loss_org.mean() + domain_task_loss_query.mean() #+ mlm_loss.mean()
+1589c1605,1606
+<                     loss = domain_binary_loss + task_binary_loss + task_loss_org*2 + domain_task_loss_query + task_loss_query #+ mlm_loss
+---
+>                     #loss = domain_binary_loss + task_binary_loss + task_loss_org + pseudo + domain_task_loss_query #+ mlm_loss
+>                     loss = task_loss_org + domain_task_loss_query #+ mlm_loss
+1633c1650
+<             if epo < 2 or int(epo/3)!=0:
+---
+>             if epo < 2 and int(epo/3)!=0:

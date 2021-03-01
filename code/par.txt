@@ -1,0 +1,17 @@
+- input_ids: 就是一连串 token 在字典中的对应id。形状为 (batch_size, sequence_length)。
+
+- token_type_ids: 可选。就是 token 对应的句子id，值为0或1（0表示对应的token属于第一句，1表示属于第二句）。形状为(batch_size, sequence_length)。
+
+- attention_mask: 可选。各元素的值为 0 或 1 ，避免在 padding 的 token 上计算 attention（1不进行masked，0则masked）。形状为(batch_size, sequence_length)。
+
+- position_ids: 可选。表示 token 在句子中的位置id。形状为(batch_size, sequence_length)。形状为(batch_size, sequence_length)。
+
+- head_mask: 可选。各元素的值为 0 或 1 ，1 表示 head 有效，0无效。形状为(num_heads,)或(num_layers, num_heads)。
+
+- input_embeds: 可选。替代 input_ids，我们可以直接输入 Embedding 后的 Tensor。形状为(batch_size, sequence_length, embedding_dim)。
+
+- encoder_hidden_states: 可选。encoder 最后一层输出的隐藏状态序列，模型配置为 decoder 时使用。形状为(batch_size, sequence_length, hidden_size)。
+
+- encoder_attention_mask: 可选。避免在 padding 的 token 上计算 attention，模型配置为 decoder 时使用。形状为(batch_size, sequence_length)。
+
+
