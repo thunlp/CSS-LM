@@ -29,7 +29,8 @@ CLS_hidd_list = list()
 device = "cuda"
 
 
-pretrained_weights = '/data5/private/suyusheng/task_selecte/bert-base-uncased-768/'
+#pretrained_weights = '/data5/private/suyusheng/task_selecte/bert-base-uncased-768/'
+pretrained_weights = 'bert-base-uncased'
 tokenizer = BertTokenizer.from_pretrained(pretrained_weights, do_lower_case=True)
 
 #fine_tuned_weight = '/data5/private/suyusheng/task_selecte/output_finetune/pytorch_model.bin_1314'

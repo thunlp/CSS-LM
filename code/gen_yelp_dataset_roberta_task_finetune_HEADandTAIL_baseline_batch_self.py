@@ -21,6 +21,7 @@ from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 file_in = sys.argv[1]
 file_out = sys.argv[2]
 model = sys.argv[3]
+#model = 'roberta-base'
 num_samples = int(sys.argv[4])
 num_labels = int(sys.argv[5])
 batch_size = int(sys.argv[6])

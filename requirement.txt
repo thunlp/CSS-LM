@@ -1,0 +1,12 @@
+torch
+numpy
+requests
+filelock
+tqdm
+tokenizers
+regex
+sentencepiece
+six
+sacremoses
+packaging
+apex

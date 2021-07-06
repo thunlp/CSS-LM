@@ -19,7 +19,8 @@ with open("domain_data/all_fewshot.txt") as f:
 
 print("Domain:",counter)
 
-with open("openwebtext.txt") as f:
+#with open("openwebtext.txt") as f:
+with open("retrieve.txt") as f:
     for line in f:
         if line == "\n":
             continue
