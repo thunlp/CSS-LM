@@ -1,12 +1,12 @@
 baseline_*/
-output_[*]/
-script/backup_[*]/
-script/baseline_[*]/
-script/final_[*]/
-script/output_[*]/
-script/retriver_[*]/
-script/roberta-base-768-[*]/
-script/bert-base-768-[*]/
+output_*/
+script/backup_*/
+script/baseline_*/
+script/final_*/
+script/output_*/
+script/retriver_*/
+script/roberta-base-768-*/
+script/bert-base-768-*/
 
 script/bert-base-768/*
 script/roberta-base-768/*
