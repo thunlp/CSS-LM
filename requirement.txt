@@ -9,4 +9,3 @@ sentencepiece
 six
 sacremoses
 packaging
-apex

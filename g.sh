@@ -1,3 +1,3 @@
 git add --all
-git commit -m "major revision"
+git commit -m "revision"
 git push --all
