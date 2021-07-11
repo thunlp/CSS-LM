@@ -41,7 +41,7 @@ Please cite our paper if you use LM-BFF in your work:
 @inproceedings{su2021csslm,
    title={CSS-LM: A Contrastive Framework for Semi-supervised Fine-tuning of Pre-trained Language Models},
    author={Su, Yusheng and Han, Xu and Lin, Yankai and Zhang, Zhengyan and Liu, Zhiyuan and Li, Peng and Zhou, Jie and  Sun, Maosong},
-   booktitle={Association for WWW Workshop},
+   booktitle={Proceedings of WWW Workshop},
    year={2021}
 }
 ```
