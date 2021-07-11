@@ -4,6 +4,8 @@
 Overview
 =============
 ![CSS-LM](https://github.com/thunlp/CSS-LM/blob/main/CSS-LM.jpg)
+CSS-LM improves the fine-tuning phase of PLMs via contrastive semi-supervised learning. Specifically, given a specific task, we retrieve positive and negative instances from large-scale unlabeled corpora according to their domain-level and class-level semantic relatedness to the task. By performing contrastive semi-supervised learning on both the retrieved unlabeled and original labeled instances, CSS-LM can help PLMs capture crucial task-related semantic features and achieve better performance in low-resource scenarios.
+
 
 
 <!--- 
