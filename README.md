@@ -27,7 +27,7 @@ bash run1.sh
 
 ## Citation
 
-Please cite our paper if you use LM-BFF in your work:
+Please cite our paper if you use CSS-LM in your work:
 ```
 @inproceedings{su2021csslm,
    title={CSS-LM: A Contrastive Framework for Semi-supervised Fine-tuning of Pre-trained Language Models},
