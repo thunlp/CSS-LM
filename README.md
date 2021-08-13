@@ -1,5 +1,5 @@
 # CSS-LM
-[CSS-LM](https://arxiv.org/pdf/2102.03752.pdf): Contrastive Semi-supervised Fine-tuning of Pre-trained Language Models
+[CSS-LM](https://arxiv.org/pdf/2102.03752.pdf): A Contrastive Framework for Semi-supervised Fine-tuning of Pre-trained Language Models
 
 ## Overview
 
