@@ -29,6 +29,20 @@ bash run1.sh
 
 Please cite our paper if you use CSS-LM in your work:
 ```
+@article{2021,
+   title={CSS-LM: A Contrastive Framework for Semi-Supervised Fine-Tuning of Pre-Trained Language Models},
+   volume={29},
+   ISSN={2329-9304},
+   url={http://dx.doi.org/10.1109/TASLP.2021.3105013},
+   DOI={10.1109/taslp.2021.3105013},
+   journal={IEEE/ACM Transactions on Audio, Speech, and Language Processing},
+   publisher={Institute of Electrical and Electronics Engineers (IEEE)},
+   author={Su, Yusheng and Han, Xu and Lin, Yankai and Zhang, Zhengyan and Liu, Zhiyuan and Li, Peng and Zhou, Jie and Sun, Maosong},
+   year={2021},
+   pages={2930–2941}
+}
+
+
 @inproceedings{su2021csslm,
    title={CSS-LM: A Contrastive Framework for Semi-supervised Fine-tuning of Pre-trained Language Models},
    author={Su, Yusheng and Han, Xu and Lin, Yankai and Zhang, Zhengyan and Liu, Zhiyuan and Li, Peng and Zhou, Jie and  Sun, Maosong},
