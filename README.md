@@ -1,6 +1,10 @@
 # CSS-LM
 [CSS-LM](https://arxiv.org/abs/2102.03752): A Contrastive Framework for Semi-supervised Fine-tuning of Pre-trained Language Models
 
+- WWW-Workshop 2021 Accepted.
+
+- IEEE/TASLP 2021 Accepted.
+
 ## Overview
 
 ![CSS-LM](https://github.com/thunlp/CSS-LM/blob/main/CSS-LM.jpg)
@@ -29,7 +33,7 @@ bash run1.sh
 
 Please cite our paper if you use CSS-LM in your work:
 ```
-@article{2021,
+@article{su2021csslm,
    title={CSS-LM: A Contrastive Framework for Semi-Supervised Fine-Tuning of Pre-Trained Language Models},
    volume={29},
    ISSN={2329-9304},
