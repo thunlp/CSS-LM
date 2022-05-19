@@ -45,14 +45,6 @@ Please cite our paper if you use CSS-LM in your work:
    year={2021},
    pages={2930–2941}
 }
-
-
-@inproceedings{su2021csslm,
-   title={CSS-LM: A Contrastive Framework for Semi-supervised Fine-tuning of Pre-trained Language Models},
-   author={Su, Yusheng and Han, Xu and Lin, Yankai and Zhang, Zhengyan and Liu, Zhiyuan and Li, Peng and Zhou, Jie and  Sun, Maosong},
-   booktitle={Proceedings of WWW Workshop},
-   year={2021}
-}
 ```
 
 
