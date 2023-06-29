@@ -12,6 +12,7 @@ CSS-LM improves the fine-tuning phase of PLMs via contrastive semi-supervised le
 
 ## Setups
 - python>=3.6
+- torch>=2.0.0+cu118
 
 
 ## Requirements 
