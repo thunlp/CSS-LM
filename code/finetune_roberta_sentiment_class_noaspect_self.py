@@ -129,72 +129,15 @@ def convert_examples_to_features(examples, aspect_list, sentiment_list, max_seq_
         label_list = sorted(sentiment_list)
     else:
         print("Wrong task")
-    '''
-    for w in label_list:
-        print(w,tokenizer.encode(w))
-    exit()
-    '''
+
     label_map = {label : i for i, label in enumerate(label_list)}
 
     features = []
     for (ex_index, example) in enumerate(examples):
 
-        #Add new special tokens
-        '''
-        tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-model = GPT2Model.from_pretrained('gpt2')
-        special_tokens_dict = {'cls_token': '<CLS>'}
-        num_added_toks = tokenizer.add_special_tokens(special_tokens_dict)
-        print('We have added', num_added_toks, 'tokens')
-        model.resize_token_embeddings(len(tokenizer))
-        '''
-
-        '''
-        print(tokenizer.all_special_tokens)
-        print(tokenizer.encode(tokenizer.all_special_tokens))
-        #['[PAD]', '[SEP]', '[CLS]', '[MASK]', '[UNK]']
-        #[ 0, 102, 101, 103, 100]
-        '''
-
-
-        # The convention in BERT is:
-        # (a) For sequence pairs:
-        #  tokens:   [CLS] is this jack ##son ##ville ? [SEP] no it is not . [SEP]
-        #  type_ids: 0   0  0    0    0     0       0 0    1  1  1  1   1 1
-        # (b) For single sequences:
-        #  tokens:   [CLS] the dog is hairy . [SEP]
-        #  type_ids: 0   0   0   0  0     0 0
-        #
-        # Where "type_ids" are used to indicate whether this is the first
-        # sequence or the second sequence. The embedding vectors for `type=0` and
-        # `type=1` were learned during pre-training and are added to the wordpiece
-        # embedding vector (and position vector). This is not *strictly* necessary
-        # since the [SEP] token unambigiously separates the sequences, but it makes
-        # it easier for the model to learn the concept of sequences.
-        #
-        # For classification tasks, the first vector (corresponding to [CLS]) is
-        # used as as the "sentence vector". Note that this only makes sense because
-        # the entire model is fine-tuned.
-
-        ###
         input_ids = tokenizer.encode(example.sentence,add_special_tokens=True)
-        ###
-        '''
-        #print(tokenizer.convert_tokens_to_ids("<sep>")) #3
-        next_input = tokenizer.encode(example.aspect, add_special_tokens=False)
-        next_input = [3] + next_input + [2]
-        input_ids += next_input
-        '''
-        ###
         segment_ids = [0] * len(input_ids)
 
-        '''
-        if task_n==2:
-            #"[SEP]"
-            input_ids += input_ids + [102]
-            #sentiment: word (Next sentence)
-            #segment_ids += [1] * (len(tokens_b) + 1)
-        '''
 
         # The “Attention Mask” is simply an array of 1s and 0s indicating which tokens are padding and which aren’t (including special tokens)
 
@@ -246,8 +189,6 @@ model = GPT2Model.from_pretrained('gpt2')
 
 def main():
     parser = argparse.ArgumentParser()
-    ## Required parameters
-    ###############
     parser.add_argument("--data_dir",
                         default=None,
                         type=str,
@@ -349,7 +290,6 @@ def main():
                         type=int,
                         required=True,
                         help="Choose Task")
-    ###############
 
     args = parser.parse_args()
 
@@ -485,12 +425,6 @@ def main():
         else:
             print("Wrong here1")
 
-        '''
-        print("========")
-        print(train_data)
-        print(type(train_data))
-        exit()
-        '''
 
         if args.local_rank == -1:
             train_sampler = RandomSampler(train_data)
@@ -503,8 +437,6 @@ def main():
         model.train()
 
 
-        ##########Pre-Pprocess#########
-        ###############################
 
 
         for epoch in trange(int(args.num_train_epochs), desc="Epoch"):
@@ -522,16 +454,8 @@ def main():
                     print("Wrong here3")
 
                 if args.task == 1:
-                    #loss, logits, hidden_states, attentions
-                    #output = model(input_ids=input_ids, token_type_ids=None, attention_mask=attention_mask, labels=label_ids)
-                    #loss = output.loss
                     loss, logit = model(input_ids_org=input_ids, token_type_ids=None, attention_mask=attention_mask, sentence_label=label_ids, func="task_class")
                 elif args.task == 2:
-                    #loss, logits, hidden_states, attentions
-                    #output = model(input_ids=input_ids, token_type_ids=segment_ids, attention_mask=attention_mask, labels=label_ids)
-                    #output = model(input_ids=input_ids, token_type_ids=segment_ids, attention_mask=attention_mask, labels=label_ids)
-                    #output = model(input_ids=input_ids, token_type_ids=None, attention_mask=attention_mask, labels=label_ids)
-                    #loss = output.loss
                     loss, logit = model(input_ids_org=input_ids, token_type_ids=None, attention_mask=attention_mask, sentence_label=label_ids, func="task_class")
                 else:
                     print("Wrong!!")
@@ -542,11 +466,8 @@ def main():
                     loss = loss / args.gradient_accumulation_steps
 
                 if args.fp16:
-                    ###
-                    #optimizer.backward(loss)
                     with amp.scale_loss(loss, optimizer) as scaled_loss:
                         scaled_loss.backward()
-                    ###
                 else:
                     loss.backward()
 
@@ -555,8 +476,6 @@ def main():
                 nb_tr_examples += input_ids.size(0)
                 nb_tr_steps += 1
                 if (step + 1) % args.gradient_accumulation_steps == 0:
-                    # modify learning rate with special warm up BERT uses
-                    ###
                     if args.fp16:
                         torch.nn.utils.clip_grad_norm_(amp.master_params(optimizer), args.max_grad_norm)
                     else:
@@ -565,12 +484,10 @@ def main():
                     scheduler.step()
                     model.zero_grad()
                     global_step += 1
-                    ###
             if epoch < -1:
                 continue
             else:
                 model_to_save = model.module if hasattr(model, 'module') else model
-                #output_model_file = os.path.join(args.output_dir, "pytorch_model.bin_{}".format(global_step))
                 output_model_file = os.path.join(args.output_dir, "pytorch_model.bin_{}".format(epoch))
                 torch.save(model_to_save.state_dict(), output_model_file)
 

@@ -1,7 +1,7 @@
-gpu_0=2
-gpu_1=5
-gpu_2=6
-gpu_3=7
+gpu_0=0
+gpu_1=1
+gpu_2=2
+gpu_3=3
 gpu_4=4
 gpu_5=5
 gpu_6=6
@@ -29,10 +29,7 @@ N_times_2=14
 #All reduce to 16 retrieved instances
 
 batch_size=4
-#max_length=128
 max_length=100
-
-#comment eval_text --> when change to 2, there is a space error. files haven't fix in comment part.
 
 
 #all --> use batch_size=8
@@ -42,9 +39,9 @@ do
     bash run_semeval_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
     exit
     #add back 32,48
-    bash run_semeval_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    #bash run_semeval_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
     #add back 32,48
-    bash run_semeval_st.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    #bash run_semeval_st.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
     bash run_semeval_sscl.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
 
     ######################
