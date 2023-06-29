@@ -13,3 +13,7 @@ script/roberta-base-768/*
 data/opendomain_finetune_noword_10000/*
 data/openwebtext/*
 download/*
+
+apex
+download
+download.zip
