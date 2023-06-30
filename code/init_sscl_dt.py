@@ -169,23 +169,10 @@ def get_parameter(parser):
 def return_Classifier(weight, bias, dim_in, dim_out):
     #LeakyReLU = torch.nn.LeakyReLU
     classifier = torch.nn.Linear(dim_in, dim_out , bias=True)
-    #print(classifier)
-    #print(classifier.weight)
-    #print(classifier.weight.shape)
-    #print(classifier.weight.data)
-    #print(classifier.weight.data.shape)
-    #print("---")
+
     classifier.weight.data = weight.to("cpu")
     classifier.bias.data = bias.to("cpu")
     classifier.requires_grad=False
-    #print(classifier)
-    #print(classifier.weight)
-    #print(classifier.weight.shape)
-    #print("---")
-    #exit()
-    #print(classifier)
-    #exit()
-    #logit = LeakyReLU(classifier)
     return classifier
 
 
@@ -221,6 +208,11 @@ parser = argparse.ArgumentParser()
 parser = get_parameter(parser)
 args = parser.parse_args()
 
+#print(11111)
+#print(args.data_dir_outdomain)
+#print(args.data_dir_indomain)
+#print(11111)
+#exit()
 
 docs_tail_head, docs_head, docs_tail, data = load_GeneralDomain(args.data_dir_outdomain)
 in_data = load_InDomain(args.data_dir_indomain)
@@ -276,15 +268,7 @@ def in_Domain_Task_Data_mutiple(data_dir_indomain, tokenizer, max_seq_length):
 
     ###Create data: 1 choosed data along with the rest of 7 class data
 
-    '''
-    all_input_ids = list()
-    all_input_mask = list()
-    all_segment_ids = list()
-    all_lm_labels_ids = list()
-    all_is_next = list()
-    all_tail_idxs = list()
-    all_sentence_labels = list()
-    '''
+
     cur_tensors_list = list()
     #print(list(label_map.values()))
     candidate_label_list = list(label_map.values())
@@ -335,9 +319,6 @@ def in_Domain_Task_Data_mutiple(data_dir_indomain, tokenizer, max_seq_length):
             candidate_label_list.remove(label_map[label])
 
         if sentiment_label_map[sentiment] in candidate_sentiment_label_list:
-            #print("----")
-            #print(sentiment_label_map[sentiment])
-            #print("----")
             all_type_sentiment_sentence[sentiment_label_map[sentiment]]=cur_tensors
             candidate_sentiment_label_list.remove(sentiment_label_map[sentiment])
         ###
@@ -350,14 +331,7 @@ def in_Domain_Task_Data_mutiple(data_dir_indomain, tokenizer, max_seq_length):
 
 
 def AugmentationData_Domain(train_batch_size, k, tokenizer, max_seq_length):
-    #top_k_shape = top_k.indices.shape
-    #ids = top_k.indices.reshape(top_k_shape[0]*top_k_shape[1]).tolist()
-    #top_k_shape = top_k["indices"].shape
-    #ids_pos = top_k["indices"].reshape(top_k_shape[0]*top_k_shape[1]).tolist()
-    #ids = top_k["indices"]
 
-    #bottom_k_shape = bottom_k["indices"].shape
-    #ids_neg = bottom_k["indices"].reshape(bottom_k_shape[0]*bottom_k_shape[1]).tolist()
     ids_pos = random.sample(range(0,len(in_data)),train_batch_size)
 
     ids_neg = random.sample(range(0,len(data)),train_batch_size*k)
@@ -392,10 +366,6 @@ def AugmentationData_Domain(train_batch_size, k, tokenizer, max_seq_length):
         all_lm_labels_ids.append(torch.tensor(cur_features.lm_label_ids))
         all_is_next.append(torch.tensor(0))
         all_tail_idxs.append(torch.tensor(cur_features.tail_idxs))
-        #if i in ids_neg:
-        #    all_id_domain.append(torch.tensor(0))
-        #elif i in ids_pos:
-        #    all_id_domain.append(torch.tensor(1))
         all_id_domain.append(torch.tensor(1))
 
 
@@ -417,10 +387,6 @@ def AugmentationData_Domain(train_batch_size, k, tokenizer, max_seq_length):
         all_lm_labels_ids.append(torch.tensor(cur_features.lm_label_ids))
         all_is_next.append(torch.tensor(0))
         all_tail_idxs.append(torch.tensor(cur_features.tail_idxs))
-        #if i in ids_neg:
-        #    all_id_domain.append(torch.tensor(0))
-        #elif i in ids_pos:
-        #    all_id_domain.append(torch.tensor(1))
         all_id_domain.append(torch.tensor(0))
 
 
@@ -455,13 +421,6 @@ def AugmentationData_Task(top_k, tokenizer, max_seq_length, add_org=None):
     #input_ids_, input_ids_org_, input_mask_, segment_ids_, lm_label_ids_, is_next_, tail_idxs_, sentence_label_ = add_org
     input_ids_, input_ids_org_, input_mask_, segment_ids_, lm_label_ids_, is_next_, tail_idxs_, sentence_label_, sentiment_label_ = add_org
 
-    ###
-    #print("input_ids_",input_ids_.shape)
-    #print("---")
-    #print("sentence_ids",sentence_ids.shape)
-    #print("---")
-    #print("sentence_label_",sentence_label_.shape)
-    #exit()
 
 
     for id_1, sent in enumerate(sentence_ids):
@@ -529,37 +488,21 @@ def AugmentationData_Task_pos_and_neg_DT(top_k=None, tokenizer=None, max_seq_len
     input_ids_, input_ids_org_, input_mask_, segment_ids_, lm_label_ids_, is_next_, tail_idxs_, sentence_label_, sentiment_label_ = add_org
 
 
-    #uniqe_type_id = torch.LongTensor(list(set(sentence_label_.tolist())))
 
     all_sentence_binary_label = list()
     #all_in_task_rep_comb = list()
     all_in_rep_comb = list()
 
     for id_1, num in enumerate(sentence_label_):
-        #print([sentence_label_==num])
-        #print(type([sentence_label_==num]))
+
         sentence_label_int = (sentence_label_==num).to(torch.long)
-        #print(sentence_label_int)
-        #print(sentence_label_int.shape)
-        #print(in_task_rep[id_1].shape)
-        #print(in_task_rep.shape)
-        #exit()
+
         in_task_rep_append = in_task_rep[id_1].unsqueeze(0).expand(in_task_rep.shape[0],-1)
         in_domain_rep_append = in_domain_rep[id_1].unsqueeze(0).expand(in_domain_rep.shape[0],-1)
-        #print(in_task_rep_append)
-        #print(in_task_rep_append.shape)
+
         in_task_rep_comb = torch.cat((in_task_rep_append,in_task_rep),-1)
         in_domain_rep_comb = torch.cat((in_domain_rep_append,in_domain_rep),-1)
-        #print(in_task_rep_comb)
-        #print(in_task_rep_comb.shape)
-        #exit()
-        #sentence_label_int = sentence_label_int.to(torch.float32)
-        #print(sentence_label_int)
-        #exit()
-        #all_sentence_binary_label.append(torch.tensor([1 if sentence_label_[id_1]==iid else 0 for iid in sentence_label_]))
-        #all_sentence_binary_label.append(torch.tensor([1 if num==iid else 0 for iid in sentence_label_]))
-        #print(in_task_rep_comb.shape)
-        #print(in_domain_rep_comb.shape)
+
         in_rep_comb = torch.cat([in_domain_rep_comb,in_task_rep_comb],-1)
         #print(in_rep.shape)
         #exit()
@@ -583,40 +526,22 @@ def AugmentationData_Task_pos_and_neg(top_k=None, tokenizer=None, max_seq_length
     top_k_shape = top_k.indices.shape
     sentence_ids = top_k.indices
     '''
-    #top_k_shape = top_k["indices"].shape
-    #sentence_ids = top_k["indices"]
 
-
-    #input_ids_, input_ids_org_, input_mask_, segment_ids_, lm_label_ids_, is_next_, tail_idxs_, sentence_label_ = add_org
     input_ids_, input_ids_org_, input_mask_, segment_ids_, lm_label_ids_, is_next_, tail_idxs_, sentence_label_, sentiment_label_ = add_org
 
 
-    #uniqe_type_id = torch.LongTensor(list(set(sentence_label_.tolist())))
 
     all_sentence_binary_label = list()
     all_in_task_rep_comb = list()
 
     for id_1, num in enumerate(sentence_label_):
-        #print([sentence_label_==num])
-        #print(type([sentence_label_==num]))
+
         sentence_label_int = (sentence_label_==num).to(torch.long)
-        #print(sentence_label_int)
-        #print(sentence_label_int.shape)
-        #print(in_task_rep[id_1].shape)
-        #print(in_task_rep.shape)
-        #exit()
+
         in_task_rep_append = in_task_rep[id_1].unsqueeze(0).expand(in_task_rep.shape[0],-1)
-        #print(in_task_rep_append)
-        #print(in_task_rep_append.shape)
+
         in_task_rep_comb = torch.cat((in_task_rep_append,in_task_rep),-1)
-        #print(in_task_rep_comb)
-        #print(in_task_rep_comb.shape)
-        #exit()
-        #sentence_label_int = sentence_label_int.to(torch.float32)
-        #print(sentence_label_int)
-        #exit()
-        #all_sentence_binary_label.append(torch.tensor([1 if sentence_label_[id_1]==iid else 0 for iid in sentence_label_]))
-        #all_sentence_binary_label.append(torch.tensor([1 if num==iid else 0 for iid in sentence_label_]))
+
         all_sentence_binary_label.append(sentence_label_int)
         all_in_task_rep_comb.append(in_task_rep_comb)
     all_sentence_binary_label = torch.stack(all_sentence_binary_label)
@@ -1001,8 +926,6 @@ def convert_example_to_features(example, max_seq_length, tokenizer):
     #print(input_ids)
     input_ids = [w if w!=None else 0 for w in input_ids]
     input_ids_org = [w if w!=None else 0 for w in input_ids_org]
-    #print(input_ids)
-    #exit()
 
     # The mask has 1 for real tokens and 0 for padding tokens. Only real
     # tokens are attended to.
@@ -1038,41 +961,7 @@ def convert_example_to_features(example, max_seq_length, tokenizer):
         input_mask = input_mask[:max_seq_length-1]+[0]
         segment_ids = segment_ids[:max_seq_length-1]+[0]
         lm_label_ids = lm_label_ids[:max_seq_length-1]+[-1]
-    '''
-    flag=False
-    if len(input_ids) != max_seq_length:
-        print(len(input_ids))
-        flag=True
-    if len(input_ids_org) != max_seq_length:
-        print(len(input_ids_org))
-        flag=True
-    if len(input_mask) != max_seq_length:
-        print(len(input_mask))
-        flag=True
-    if len(segment_ids) != max_seq_length:
-        print(len(segment_ids))
-        flag=True
-    if len(lm_label_ids) != max_seq_length:
-        print(len(lm_label_ids))
-        flag=True
-    if flag == True:
-        print("1165")
-        exit()
-    '''
 
-    '''
-    if example.guid < 5:
-        logger.info("*** Example ***")
-        logger.info("guid: %s" % (example.guid))
-        logger.info("tokens: %s" % " ".join(
-                [str(x) for x in tokens]))
-        logger.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
-        logger.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
-        logger.info(
-                "segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
-        logger.info("LM label: %s " % (lm_label_ids))
-        logger.info("Is next sentence label: %s " % (example.is_next))
-    '''
 
     features = InputFeatures(input_ids=input_ids,
                              input_ids_org = input_ids_org,
@@ -1197,7 +1086,6 @@ def main():
             train_sampler = DistributedSampler(train_dataset)
             #all_type_sentence_sampler = DistributedSampler(all_type_sentence)
         train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=args.train_batch_size)
-        #all_type_sentence_dataloader = DataLoader(all_type_sentence, sampler=all_type_sentence_sampler, batch_size=len(all_type_sentence_label))
 
         output_loss_file = os.path.join(args.output_dir, "loss")
         loss_fout = open(output_loss_file, 'w')
@@ -1210,8 +1098,6 @@ def main():
 
 
 
-        #alpha = float(1/(args.num_train_epochs*len(train_dataloader)))
-        #alpha = float(1/args.num_train_epochs)
         alpha = float(1)
         #k=8
         #k=10
@@ -1219,8 +1105,7 @@ def main():
         #k = args.K
         #k = 10
         #k = 2
-        #retrive_gate = args.num_labels_task
-        #retrive_gate = len(train_dataset)/100
+
         retrive_gate = 1
         all_type_sentence_label = list()
         all_previous_sentence_label = list()
@@ -1238,8 +1123,7 @@ def main():
             for step, batch_ in enumerate(tqdm(train_dataloader, desc="Iteration")):
 
 
-                #######################
-                ######################
+
 
                 ###Normal mode
                 batch_ = tuple(t.to(device) for t in batch_)
@@ -1251,8 +1135,6 @@ def main():
                 in_domain_rep, in_task_rep = model(input_ids_org=input_ids_org_, tail_idxs=tail_idxs_, attention_mask=input_mask_, func="in_domain_task_rep")
 
 
-                #################
-                #################
                 #Domain Binary Classifier - Outdomain
                 #batch = AugmentationData_Domain(bottom_k, tokenizer, args.max_seq_length)
                 batch = AugmentationData_Domain(in_domain_rep.shape[0], k, tokenizer, args.max_seq_length)
@@ -1260,31 +1142,17 @@ def main():
                 input_ids, input_ids_org, input_mask, segment_ids, lm_label_ids, is_next, tail_idxs, domain_id = batch
 
                 out_domain_rep_tail, out_domain_rep_head = model(input_ids_org=input_ids_org, lm_label=lm_label_ids, attention_mask=input_mask, func="in_domain_task_rep")
-                #print("======")
-                #print(domain_top_k["indices"].shape)
-                #print(input_ids_org.shape)
-                #print(out_domain_rep_tail.shape)
-                #print(in_domain_rep.shape)
-                #print("======")
-                ############Construct constrive instances
-                #print("=============")
-                #print(out_domain_rep_tail.shape)
-                #print(in_domain_rep.shape)
-                #print("=============")
+
                 comb_rep_pos = torch.cat([in_domain_rep,in_domain_rep.flip(0)], 1)
                 in_domain_rep_ready = in_domain_rep.repeat(1,int(out_domain_rep_tail.shape[0]/in_domain_rep.shape[0])).reshape(out_domain_rep_tail.shape[0],out_domain_rep_tail.shape[1])
                 comb_rep_unknow = torch.cat([in_domain_rep_ready, out_domain_rep_tail], 1)
 
 
                 in_domain_binary_loss, domain_binary_logit = model(func="domain_binary_classifier", in_domain_rep=comb_rep_pos.to(device), out_domain_rep=comb_rep_unknow.to(device), domain_id=domain_id,use_detach=use_detach)
-                ############
 
 
-                #################
-                #################
+
                 #Task Binary Classifier    in domain
-                #Pseudo Task --> Won't bp to PLM: only train classifier [In domain data]
-                #batch = AugmentationData_Task_pos_and_neg_DT(top_k=None, tokenizer=tokenizer, max_seq_length=args.max_seq_length, add_org=batch_, in_task_rep=in_task_rep, in_domain_rep=in_domain_rep)
                 batch = AugmentationData_Task_pos_and_neg(top_k=None, tokenizer=tokenizer, max_seq_length=args.max_seq_length, add_org=batch_, in_task_rep=in_task_rep)
                 batch = tuple(t.to(device) for t in batch)
                 all_in_task_rep_comb, all_sentence_binary_label = batch
@@ -1297,20 +1165,6 @@ def main():
                 #split into: in_dom and query_  --> different weight
                 task_loss_org, class_logit_org = model(input_ids_org=input_ids_org_, sentence_label=sentiment_label_, attention_mask=input_mask_, func="task_class")
 
-
-                #################
-                #################
-                #Domain Task binary   including outdomain
-                #batch = AugmentationData_Task(task_top_k, tokenizer, args.max_seq_length, add_org=batch_)
-                #batch = tuple(t.to(device) for t in batch)
-                #input_ids, input_ids_org, input_mask, segment_ids, lm_label_ids, is_next, tail_idxs, sentence_label, sentiment_label = batch
-                #out_domain_rep_tail, out_domain_rep_head = model(input_ids_org=input_ids_org, tail_idxs=tail_idxs, attention_mask=input_mask, func="in_domain_task_rep")
-                ###
-                #batch = AugmentationData_Task_pos_and_neg_DT(top_k=None, tokenizer=tokenizer, max_seq_length=args.max_seq_length, add_org=batch, in_task_rep=in_task_rep, in_domain_rep=in_domain_rep)
-                #batch = tuple(t.to(device) for t in batch)
-                #all_in_task_rep_comb, all_sentence_binary_label = batch
-                #out_task_binary_loss, task_binary_logit = model(all_in_task_rep_comb=all_in_task_rep_comb, all_sentence_binary_label=all_sentence_binary_label, func="domain_task_binary_classifier")
-                ###
 
 
                 #################
@@ -1384,15 +1238,7 @@ def main():
                 #output_model_file = os.path.join(args.output_dir, "pytorch_model.bin_{}".format(global_step))
                 output_model_file = os.path.join(args.output_dir, "pytorch_model.bin_{}".format(epo))
                 torch.save(model_to_save.state_dict(), output_model_file)
-            ####
-            '''
-            #if args.num_train_epochs/args.augment_times in [1,2,3]:
-            if (args.num_train_epochs/(args.augment_times/5))%5 == 0:
-                model_to_save = model.module if hasattr(model, 'module') else model  # Only save the model it-self
-                output_model_file = os.path.join(args.output_dir, "pytorch_model.bin_{}".format(global_step))
-                torch.save(model_to_save.state_dict(), output_model_file)
-            '''
-            ####
+
 
         loss_fout.close()
 

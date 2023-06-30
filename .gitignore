@@ -20,6 +20,8 @@ data/opendomain_finetune_noword_10000/*
 data/openwebtext/*
 download/*
 
+data/opendomain_finetune_*
+
 apex
 download
 download.zip

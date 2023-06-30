@@ -9,10 +9,7 @@ rm -rf $FINAL_file/*
 rm -rf $RETRIVER_file/*
 rm -rf $BASELINE_file/*
 
-#BATCH_SIZE=16
 RETRIVE_BATCH=1024
-#BATCH_SIZE=8
-#BATCH_SIZE=4
 BATCH_SIZE=${10}
 BATCH_SIZE_EVAL=180
 NUM_LABEL=3
@@ -21,26 +18,13 @@ EVAL_GPU=$1,$2,$3,$4
 ###
 INSTANCE_1=40000
 INSTANCE_2=10000
-#INSTANCE=100
 ###
 
-#1, 10 --> 62...
 
-#8 16 24
-#for N in 1 5 10 20 30 40 50
-#for N in 10 20 30 40 50
-#for N in 5 10 15 20 30
-###
-#for N in 5 10 15 20
-#for N in "all"
-#for N in $6 $7 $8
 ITER=${12}
 MAX_LENGTH=${11}
 for N in $5
-#for N in 25 50 100
-#for N in 5
-#for N in "all"
-###
+
 do
     ###
     N_times_1=$8
@@ -56,10 +40,7 @@ do
     ###
     mkdir ../data/restaurant_fewshot
     cd ../data/restaurant_fewshot
-    #N==50 was change
-    #python3 extract_instance.py train_all.json $N
     cp train.json_$N train.json
-    #cp train_$N.json train.json
     cd ../../script
 
 
@@ -94,7 +75,6 @@ do
     ###########
     #####Recorde the best retriver: Baseline
     ###########
-    #python3 code/extract.py $OUTFILE $BASELINE_file_${ITER} $N test
     mkdir $BASELINE_file"_"${ITER}
     rm $BASELINE_file"_"${ITER}/*
     python3 ../code/extract_test_by_eval.py $OUTFILE $BASELINE_file"_"${ITER} $N

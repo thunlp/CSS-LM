@@ -40,11 +40,12 @@ mv 'index.html?dl=1' download.zip
 unzip download.zip
 
 rm -rf __MACOSX
-scp -r download/opendomain_finetune_noword_10000 data
 scp -r download/openwebtext data
 scp -r download/roberta-base script/roberta-base-768
 scp -r download/bert-base-uncased script/bert-base-768
 ```
+<!-- scp -r download/opendomain_finetune_noword_10000 data-->
+
 
 ## Run CSS-LM
 

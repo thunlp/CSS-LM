@@ -10,48 +10,19 @@ rm -rf $FINAL_file/*
 rm -rf $RETRIVER_file/*
 rm -rf $BASELINE_file/*
 
-#BATCH_SIZE=16
 RETRIVE_BATCH=3072
-#BATCH_SIZE=8
-#BATCH_SIZE=4
 BATCH_SIZE=${10}
 BATCH_SIZE_EVAL=180
 NUM_LABEL=3
-#TRAIN_GPU=0,1,2,3
-#TRAIN_GPU=4,5,6,7
-#EVAL_GPU=4,5,6,7
-#TRAIN_GPU=1,2,3,4
-#EVAL_GPU=1,2,3,4
-#TRAIN_GPU=0,1,2,3
-#EVAL_GPU=0,1,2,3
+
 TRAIN_GPU=$1,$2,$3,$4
 EVAL_GPU=$1,$2,$3,$4
-#TRAIN_GPU=0,2,5,7
-#EVAL_GPU=0,2,5,7
-#TRAIN_GPU=1,2,5,7
-#EVAL_GPU=1,2,5,7
-###
+
 INSTANCE_1=40000
 INSTANCE_2=10000
-#INSTANCE=100
-###
-
-#1, 10 --> 62...
-
-#8 16 24
-#for N in 1 5 10 20 30 40 50
-#for N in 10 20 30 40 50
-#for N in 5 10 15 20 30
-###
-#for N in 5 10 15 20
-#for N in "all"
-#for N in $6 $7 $8
 ITER=${12}
 for N in $5
-#for N in 25 50 100
-#for N in 5
-#for N in "all"
-###
+
 do
     ###
     N_times_1=$8
@@ -108,7 +79,6 @@ do
         cp -r roberta-base-768/* $MODEL/
         rm -rf $MODEL/pytorch_model.bin
         cp $OUTFILE/pytorch_model.bin_dev_best $MODEL/pytorch_model.bin
-        #cp $OUTFILE/pytorch_model.bin_test_best $MODEL/pytorch_model.bin
 
 
         ##############
@@ -136,11 +106,7 @@ do
         DATA_in=../data/restaurant_fewshot/
         DATA_out=../data/opendomain_finetune_noword_10000/
         OUTFILE="output_pretrain_roberta_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_st"
-        #rm -rf $MODEL
-        #cp -r roberta-base-768 $MODEL
-        #rm $MODEL/pytorch_model.bin
-        #cp $OUTFILE/pytorch_model.bin_dev_best $MODEL/pytorch_model.bin
-        #OUTFILE="output_pretrain_roberta_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL"
+
 
         #eval
         #eval  --> can only be on one GPU

@@ -19,11 +19,8 @@ NUM_LABEL=3
 TRAIN_GPU=$1,$2,$3,$4
 EVAL_GPU=$1,$2,$3,$4
 
-###
 INSTANCE_1=40000
 INSTANCE_2=10000
-#INSTANCE=100
-###
 
 MAX_LENGTH=${11}
 ITER=${12}
@@ -44,37 +41,30 @@ do
     ###
     mkdir ../data/restaurant_fewshot
     cd ../data/restaurant_fewshot
-    #N==50 was change
-    #python3 extract_instance.py train_all.json $N
     cp train.json_$N train.json
-    #cp train_$N.json train.json
     cd ../../script
 
     ###########
     ###Train Baseline models
     ###########
-    #fix
-    ###
+
     OUTFILE="output_pretrain_bert_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_sscl_dt"
-    ###
     rm -rf $OUTFILE
     mkdir $OUTFILE
 
-    #fix
-    ###
+
     #MODEL=roberta-base
     MODEL=bert-base-uncased
     ###
     DATA_in=../data/restaurant_fewshot/
     DATA_out=../data/opendomain_finetune_noword_10000/
+    rm -rf $DATA_out
+    cp -r ../download/opendomain_finetune_noword_10000 $DATA_out
 
-    #fix
-    ###
+
     CUDA_VISIBLE_DEVICES=$TRAIN_GPU python3 -W ignore::UserWarning ../code/init_bert_sscl_dt.py  --num_labels_task $NUM_LABEL --do_train   --do_lower_case   --data_dir_outdomain $DATA_out  --data_dir_indomain $DATA_in --pretrain_model $MODEL --max_seq_length $MAX_LENGTH --train_batch_size $BATCH_SIZE --learning_rate $LEARNING_RATE   --num_train_epochs $N_times_1   --output_dir $OUTFILE  --loss_scale 128 --weight_decay 0 --adam_epsilon 1e-8 --max_grad_norm 1 --fp16_opt_level O1 --task 0 --augment_times 20 --K 16
-    ###
 
-    #fix
-    ###
+
     #MODEL=roberta-base
     MODEL=bert-base-uncased
     ###
@@ -83,8 +73,7 @@ do
     ###########
     #####Eval Baseline models
     ###########
-    #fix
-    ###
+
     CUDA_VISIBLE_DEVICES=$EVAL_GPU python3 -W ignore::UserWarning ../code/eval_bert_useMLMCLASS_sentiment_noaspect_HEADandTAIL_updateRep_batch_self.py   --num_labels_task $NUM_LABEL --do_eval   --do_lower_case   --data_dir $DATA_in   --pretrain_model $MODEL --max_seq_length $MAX_LENGTH --eval_batch_size $BATCH_SIZE_EVAL --learning_rate $LEARNING_RATE   --num_train_epochs $N_times_1   --output_dir $OUTFILE   --loss_scale 128 --weight_decay 0 --adam_epsilon 1e-8 --max_grad_norm 1 --fp16_opt_level O1 --task 2 --choose_eval_test_both 2
     ###
 
@@ -110,7 +99,6 @@ do
     ###
     ###
     INPUT=../data/openwebtext/train.txt
-    #INPUT=../data/openwebtext/train_100.txt
     OUTPUT=../data/opendomain_finetune_noword_10000
     #fix
     ###
@@ -119,16 +107,10 @@ do
     mkdir $OUTPUT
     mkdir $MODEL
     rm -rf $MODEL/*
-    #fix
-    ###
     cp -r bert-base-768/* $MODEL/
-    ###
     rm -rf $MODEL/pytorch_model.bin
     cp $OUTFILE/pytorch_model.bin_dev_best $MODEL/pytorch_model.bin
-    #cp $OUTFILE/pytorch_model.bin_test_best $MODEL/pytorch_model.bin
 
-    #fix
-    ###
     CUDA_VISIBLE_DEVICES=$EVAL_GPU python3 ../code/gen_yelp_dataset_bert_task_finetune_HEADandTAIL_baseline_batch_self.py $INPUT $OUTPUT/train $MODEL $INSTANCE_1 $NUM_LABEL $RETRIVE_BATCH
     ###
 
@@ -144,104 +126,59 @@ do
 
     #for K in 8 16 24 32 64
     for K in 16 32 48
-    #for K in 16
-    #for K in 32 64
-    #for K in 48
     do
-        ############################
-        #fix
-        ###
+
         OUTFILE="output_pretrain_bert_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_sscl_dt"
-        ###
-        ##
         rm -rf $OUTFILE
         mkdir $OUTFILE
         cp -r backup_semeval/* $OUTFILE/
-        ##
-        ###
         INPUT=../data/openwebtext/train.txt
         OUTPUT=../data/opendomain_finetune_noword_10000
-        #fix
-        ###
         MODEL=bert-base-768-yelp-DomainTask-noword-sentiment-HEADandTAIL-opendomain-entropy-self
-        ###
         mkdir $OUTPUT
         mkdir $MODEL
         rm -rf $MODEL/*
-        #fix
-        ###
-        #cp -r roberta-base-768/* $MODEL/
         cp -r bert-base-768/* $MODEL/
-        ###
         rm -rf $MODEL/pytorch_model.bin
         cp $OUTFILE/pytorch_model.bin_dev_best $MODEL/pytorch_model.bin
-        #cp $OUTFILE/pytorch_model.bin_test_best $MODEL/pytorch_model.bin
-        ############################
 
         ###########
         #####Train a model and better retriver for generation doc representation
         ###########
-        #fix
-        ###
         OUTFILE="output_pretrain_bert_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_sscl_dt"
-        ###
-
-
-        #cp -r backup_semeval/* $OUTFILE
 
 
         rm -rf $OUTFILE
         mkdir $OUTFILE
 
-        ##From org train
-        #MODEL=roberta-base
-        #From trained <s> train
-        #fix
-        ###
         MODEL=bert-base-768-yelp-DomainTask-noword-sentiment-HEADandTAIL-opendomain-entropy-self
-        ###
 
         #Need to filter some sentence to train the domain model
         #Given and put some outdomain data in DATA_out
         DATA_out=../data/opendomain_finetune_noword_10000/
         DATA_in=../data/restaurant_fewshot/
 
-        #fix
-        ###
         CUDA_VISIBLE_DEVICES=$TRAIN_GPU python3 -W ignore::UserWarning ../code/pretrain_bert_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_updateRep_opendomain_fast_entropy_self.py   --num_labels_task $NUM_LABEL --do_train   --do_lower_case   --data_dir_outdomain $DATA_out  --data_dir_indomain $DATA_in --pretrain_model $MODEL --max_seq_length $MAX_LENGTH --train_batch_size $BATCH_SIZE --learning_rate $LEARNING_RATE   --num_train_epochs $N_times_1   --output_dir $OUTFILE --loss_scale 128 --weight_decay 0 --adam_epsilon 1e-8 --max_grad_norm 1 --fp16_opt_level O1 --task 0 --augment_times 20 --K $K
-        ###
 
 
         ###########
         #####Eval the model and extract the best model to _gen dir
         ###########
-        #fix
-        ###
 
         MODEL=bert-base-768-yelp-DomainTask-noword-sentiment-HEADandTAIL-opendomain-entropy-self
-        ###
         DATA_in=../data/restaurant_fewshot/
         DATA_out=../data/opendomain_finetune_noword_10000/
-        #fix
-        ###
         OUTFILE="output_pretrain_bert_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_sscl_dt"
-        ###
 
-        ###
         CUDA_VISIBLE_DEVICES=$EVAL_GPU python3 -W ignore::UserWarning ../code/eval_bert_useMLMCLASS_sentiment_noaspect_HEADandTAIL_updateRep_batch_self.py   --num_labels_task $NUM_LABEL --do_eval   --do_lower_case   --data_dir $DATA_in   --pretrain_model $MODEL --max_seq_length $MAX_LENGTH --eval_batch_size $BATCH_SIZE_EVAL --learning_rate $LEARNING_RATE   --num_train_epochs $N_times_1   --output_dir $OUTFILE   --loss_scale 128 --weight_decay 0 --adam_epsilon 1e-8 --max_grad_norm 1 --fp16_opt_level O1 --task 2 --choose_eval_test_both 2
-        ###
 
         python3 ../code/score.py $OUTFILE
 
 
-        ##########
-        #fix
-        ###
         RETRIVER_file=retriver_bert_n_result_open_domain_entropy_sscl_dt_$K"_"$ITER
         ###
         mkdir $RETRIVER_file
         rm -rf $RETRIVER_file/*
-        ##########
 
         ###########
         #####Recorde the best retriver

@@ -10,52 +10,23 @@ rm -rf $FINAL_file/*
 rm -rf $RETRIVER_file/*
 rm -rf $BASELINE_file/*
 
-#BATCH_SIZE=16
+
 RETRIVE_BATCH=1024
-#BATCH_SIZE=8
-#BATCH_SIZE=4
+
 BATCH_SIZE=${10}
 BATCH_SIZE_EVAL=180
-#BATCH_SIZE_EVAL=320
+
 NUM_LABEL=3
-#TRAIN_GPU=0,1,2,3
-#TRAIN_GPU=4,5,6,7
-#EVAL_GPU=4,5,6,7
-#TRAIN_GPU=1,2,3,4
-#EVAL_GPU=1,2,3,4
-#TRAIN_GPU=0,1,2,3
-#EVAL_GPU=0,1,2,3
-#TRAIN_GPU=$1,$2,$3,$4 ${11} ${12} ${13} ${14}
-#EVAL_GPU=$1,$2,$3,$4 ${11} ${12} ${13} ${14}
+
 TRAIN_GPU=$1,$2,$3,$4
 EVAL_GPU=$1,$2,$3,$4
-#TRAIN_GPU=0,2,5,7
-#EVAL_GPU=0,2,5,7
-#TRAIN_GPU=1,2,5,7
-#EVAL_GPU=1,2,5,7
-###
+
 INSTANCE_1=40000
 INSTANCE_2=10000
-#INSTANCE=100
-###
-
-#1, 10 --> 62...
-
-#8 16 24
-#for N in 1 5 10 20 30 40 50
-#for N in 10 20 30 40 50
-#for N in 5 10 15 20 30
-###
-#for N in 5 10 15 20
-#for N in "all"
-#for N in $6 $7 $8
 MAX_LENGTH=${11}
 ITER=${12}
 for N in $5
-#for N in 25 50 100
-#for N in 5
-#for N in "all"
-###
+
 do
     ###
     N_times_1=$8
@@ -71,10 +42,7 @@ do
     ###
     mkdir ../data/restaurant_fewshot
     cd ../data/restaurant_fewshot
-    #N==50 was change
-    #python3 extract_instance.py train_all.json $N
     cp train.json_$N train.json
-    #cp train_$N.json train.json
     cd ../../script
 
     ###########
@@ -87,9 +55,12 @@ do
     MODEL=roberta-base
     DATA_in=../data/restaurant_fewshot/
     DATA_out=../data/opendomain_finetune_noword_10000/
+    rm -rf $DATA_out
+    cp -r ../download/opendomain_finetune_noword_10000 $DATA_out
 
 
     CUDA_VISIBLE_DEVICES=$TRAIN_GPU python3 -W ignore::UserWarning ../code/init_sscl_dt.py  --num_labels_task $NUM_LABEL --do_train   --do_lower_case   --data_dir_outdomain $DATA_out  --data_dir_indomain $DATA_in --pretrain_model $MODEL --max_seq_length $MAX_LENGTH --train_batch_size $BATCH_SIZE --learning_rate $LEARNING_RATE   --num_train_epochs $N_times_1   --output_dir $OUTFILE  --loss_scale 128 --weight_decay 0 --adam_epsilon 1e-8 --max_grad_norm 1 --fp16_opt_level O1 --task 0 --augment_times 20 --K 16
+
 
 
 
@@ -116,11 +87,7 @@ do
     ###Initial retrive (First epoch retrive): Assume: pytorch_model.bin is retriver
     #####Retrive 10000 data
     #########
-    ###
-    #OUTFILE="output_pretrain_roberta_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_sscl_dt"
-    ###
     INPUT=../data/openwebtext/train.txt
-    #INPUT=../data/openwebtext/train_100.txt
     OUTPUT=../data/opendomain_finetune_noword_10000
     MODEL=roberta-base-768-yelp-DomainTask-noword-sentiment-HEADandTAIL-opendomain-entropy-self
     mkdir $OUTPUT
@@ -205,11 +172,7 @@ do
         DATA_in=../data/restaurant_fewshot/
         DATA_out=../data/opendomain_finetune_noword_10000/
         OUTFILE="output_pretrain_roberta_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_sscl_dt"
-        #rm -rf $MODEL
-        #cp -r roberta-base-768 $MODEL
-        #rm $MODEL/pytorch_model.bin
-        #cp $OUTFILE/pytorch_model.bin_dev_best $MODEL/pytorch_model.bin
-        #OUTFILE="output_pretrain_roberta_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL"
+
 
         #eval
         #eval  --> can only be on one GPU
@@ -228,9 +191,6 @@ do
         ###########
         #####Recorde the best retriver
         ###########
-        #python3 code/extract.py $OUTFILE $RETRIVER_file_$ITER $N eval
-
-        #python3 code/extract.py $OUTFILE $RETRIVER_file_$ITER $N test
         python3 ../code/extract_test_by_eval.py $OUTFILE $RETRIVER_file $N
 
 

@@ -649,6 +649,7 @@ def main():
 
         model = RobertaForMaskedLMDomainTask.from_pretrained(args.pretrain_model, output_hidden_states=False, output_attentions=False, return_dict=True, num_labels=args.num_labels_task)
         model_name_best = os.path.join(args.output_dir, model_name_best)
+
         model.load_state_dict(torch.load(model_name_best), strict=False)
         # Save a trained model
         logger.info("** ** * Saving fine - tuned model ** ** * ")
