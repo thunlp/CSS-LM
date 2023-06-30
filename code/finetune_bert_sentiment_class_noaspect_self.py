@@ -141,14 +141,7 @@ def convert_examples_to_features(examples, aspect_list, sentiment_list, max_seq_
     for (ex_index, example) in enumerate(examples):
 
         #Add new special tokens
-        '''
-        tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-model = GPT2Model.from_pretrained('gpt2')
-        special_tokens_dict = {'cls_token': '<CLS>'}
-        num_added_toks = tokenizer.add_special_tokens(special_tokens_dict)
-        print('We have added', num_added_toks, 'tokens')
-        model.resize_token_embeddings(len(tokenizer))
-        '''
+
 
         '''
         print(tokenizer.all_special_tokens)
@@ -182,23 +175,10 @@ model = GPT2Model.from_pretrained('gpt2')
         #print(input_ids)
         #print(tokenizer.decode(input_ids))
         #[101],,[102]
-        ###
-        '''
-        #print(tokenizer.convert_tokens_to_ids("<sep>")) #3
-        next_input = tokenizer.encode(example.aspect, add_special_tokens=False)
-        next_input = [3] + next_input + [2]
-        input_ids += next_input
-        '''
-        ###
+
         segment_ids = [0] * len(input_ids)
 
-        '''
-        if task_n==2:
-            #"[SEP]"
-            input_ids += input_ids + [102]
-            #sentiment: word (Next sentence)
-            #segment_ids += [1] * (len(tokens_b) + 1)
-        '''
+
 
         # The “Attention Mask” is simply an array of 1s and 0s indicating which tokens are padding and which aren’t (including special tokens)
 
@@ -419,8 +399,6 @@ def main():
         len(train_examples) / args.train_batch_size / args.gradient_accumulation_steps * args.num_train_epochs)
 
     # Prepare model
-    #model = RobertaForSequenceClassification.from_pretrained(args.pretrain_model, num_labels=args.num_labels_task, output_hidden_states=False, output_attentions=False, return_dict=True)
-    #model = RobertaForMaskedLMDomainTask.from_pretrained(args.pretrain_model, num_labels=args.num_labels_task, output_hidden_states=False, output_attentions=False, return_dict=True)
     model = BertForMaskedLMDomainTask.from_pretrained(args.pretrain_model, num_labels=args.num_labels_task, output_hidden_states=False, output_attentions=False, return_dict=True)
 
 
@@ -491,12 +469,6 @@ def main():
         else:
             print("Wrong here1")
 
-        '''
-        print("========")
-        print(train_data)
-        print(type(train_data))
-        exit()
-        '''
 
         if args.local_rank == -1:
             train_sampler = RandomSampler(train_data)
@@ -533,11 +505,7 @@ def main():
                     #loss = output.loss
                     loss, logit = model(input_ids_org=input_ids, token_type_ids=None, attention_mask=attention_mask, sentence_label=label_ids, func="task_class")
                 elif args.task == 2:
-                    #loss, logits, hidden_states, attentions
-                    #output = model(input_ids=input_ids, token_type_ids=segment_ids, attention_mask=attention_mask, labels=label_ids)
-                    #output = model(input_ids=input_ids, token_type_ids=segment_ids, attention_mask=attention_mask, labels=label_ids)
-                    #output = model(input_ids=input_ids, token_type_ids=None, attention_mask=attention_mask, labels=label_ids)
-                    #loss = output.loss
+
                     loss, logit = model(input_ids_org=input_ids, token_type_ids=None, attention_mask=attention_mask, sentence_label=label_ids, func="task_class")
                 else:
                     print("Wrong!!")

@@ -150,9 +150,9 @@ do
     cp -r $OUTFILE/* backup_semeval/
 
     #for K in 8 16 24 32 64
-    for K in 16 32 48
+    #for K in 16 32 48
     #for K in 32 64
-    #for K in 16
+    for K in 16
     do
         ############################
         OUTFILE="output_pretrain_roberta_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_sscl_dt"

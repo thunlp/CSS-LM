@@ -78,58 +78,6 @@ do
     ###Train Baseline models
     ###########
     OUTFILE="output_pretrain_roberta_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_st"
-    '''
-    rm -rf $OUTFILE
-    mkdir $OUTFILE
-
-    MODEL=roberta-base
-    DATA_in=data/restaurant_fewshot/
-    DATA_out=data/opendomain_finetune_noword_10000/
-
-
-    CUDA_VISIBLE_DEVICES=$TRAIN_GPU python3.6 -W ignore::UserWarning code/init_sscl_dt.py  --num_labels_task $NUM_LABEL --do_train   --do_lower_case   --data_dir_outdomain $DATA_out  --data_dir_indomain $DATA_in --pretrain_model $MODEL --max_seq_length 100   --train_batch_size $BATCH_SIZE --learning_rate $LEARNING_RATE   --num_train_epochs $N_times_1   --output_dir $OUTFILE  --loss_scale 128 --weight_decay 0 --adam_epsilon 1e-8 --max_grad_norm 1 --fp16_opt_level O1 --task 0 --fp16 --augment_times 20 --K 16
-    #CUDA_VISIBLE_DEVICES=$TRAIN_GPU python3.6 -W ignore::UserWarning code/finetune_roberta_sentiment_class_noaspect_self.py   --num_labels_task $NUM_LABEL --do_train   --do_lower_case   --data_dir $DATA_in   --pretrain_model $MODEL --max_seq_length 100   --train_batch_size $BATCH_SIZE --learning_rate $LEARNING_RATE   --num_train_epochs $N_times_1   --output_dir $OUTFILE   --loss_scale 128 --weight_decay 0 --adam_epsilon 1e-8 --max_grad_norm 1 --fp16_opt_level O1 --task 2 --fp16
-
-    OUTFILE="output_pretrain_roberta_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_st"
-    MODEL=roberta-base
-    DATA_in=data/restaurant_fewshot/
-
-    ###########
-    #####Eval Baseline models
-    ###########
-    CUDA_VISIBLE_DEVICES=$EVAL_GPU python3.6 -W ignore::UserWarning code/eval_roberta_useMLMCLASS_sentiment_noaspect_HEADandTAIL_updateRep_batch_self.py   --num_labels_task $NUM_LABEL --do_eval   --do_lower_case   --data_dir $DATA_in   --pretrain_model $MODEL --max_seq_length 100   --eval_batch_size $BATCH_SIZE_EVAL --learning_rate $LEARNING_RATE   --num_train_epochs $N_times_1   --output_dir $OUTFILE   --loss_scale 128 --weight_decay 0 --adam_epsilon 1e-8 --max_grad_norm 1 --fp16_opt_level O1 --task 2 --fp16 --choose_eval_test_both 2
-
-    python3 code/score.py $OUTFILE
-
-
-
-    ###########
-    #####Recorde the best retriver: Baseline
-    ###########
-    python3 code/extract.py $OUTFILE $BASELINE_file $N test
-
-
-    ##########
-    ###Initial retrive (First epoch retrive): Assume: pytorch_model.bin is retriver
-    #####Retrive 10000 data
-    #########
-    ###
-    OUTFILE="output_pretrain_roberta_including_Preprocess_DomainTask_sentiment_noaspect_HEADandTAIL_opendomain_entropy_st"
-    ###
-    INPUT=data/openwebtext/train.txt
-    #INPUT=data/openwebtext/train_100.txt
-    OUTPUT=data/opendomain_finetune_noword_10000
-    MODEL=roberta-base-768-yelp-DomainTask-noword-sentiment-HEADandTAIL-opendomain-entropy-self
-    mkdir $OUTPUT
-    mkdir $MODEL
-    rm -rf $MODEL/*
-    cp -r roberta-base-768/* $MODEL/
-    rm -rf $MODEL/pytorch_model.bin
-    #cp $OUTFILE/pytorch_model.bin_dev_best $MODEL/pytorch_model.bin
-    cp $OUTFILE/pytorch_model.bin_test_best $MODEL/pytorch_model.bin
-
-    CUDA_VISIBLE_DEVICES=$EVAL_GPU python3 code/gen_yelp_dataset_roberta_task_finetune_HEADandTAIL_baseline_batch_self.py $INPUT $OUTPUT/train $MODEL $INSTANCE_1 $NUM_LABEL $RETRIVE_BATCH
-    '''
 
 
     ######################################################
@@ -139,8 +87,8 @@ do
     ######################################################
     #cp -r backup_semeval/* $OUTFILE/
 
-    for K in 16 32 48
-    #for K in 16
+    #for K in 16 32 48
+    for K in 16
     do
         ###########
         #####Train a model and better retriver for generation doc representation

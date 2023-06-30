@@ -148,43 +148,6 @@ def convert_examples_to_features(examples, aspect_list, sentiment_list, max_seq_
     features = []
     for (ex_index, example) in enumerate(examples):
 
-        #Add new special tokens
-        '''
-        tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-model = GPT2Model.from_pretrained('gpt2')
-        special_tokens_dict = {'cls_token': '<CLS>'}
-        num_added_toks = tokenizer.add_special_tokens(special_tokens_dict)
-        print('We have added', num_added_toks, 'tokens')
-        model.resize_token_embeddings(len(tokenizer))
-        '''
-
-        '''
-        print(tokenizer.all_special_tokens)
-        print(tokenizer.encode(tokenizer.all_special_tokens))
-        #['[PAD]', '[SEP]', '[CLS]', '[MASK]', '[UNK]']
-        #[ 0, 102, 101, 103, 100]
-        '''
-
-
-        # The convention in BERT is:
-        # (a) For sequence pairs:
-        #  tokens:   [CLS] is this jack ##son ##ville ? [SEP] no it is not . [SEP]
-        #  type_ids: 0   0  0    0    0     0       0 0    1  1  1  1   1 1
-        # (b) For single sequences:
-        #  tokens:   [CLS] the dog is hairy . [SEP]
-        #  type_ids: 0   0   0   0  0     0 0
-        #
-        # Where "type_ids" are used to indicate whether this is the first
-        # sequence or the second sequence. The embedding vectors for `type=0` and
-        # `type=1` were learned during pre-training and are added to the wordpiece
-        # embedding vector (and position vector). This is not *strictly* necessary
-        # since the [SEP] token unambigiously separates the sequences, but it makes
-        # it easier for the model to learn the concept of sequences.
-        #
-        # For classification tasks, the first vector (corresponding to [CLS]) is
-        # used as as the "sentence vector". Note that this only makes sense because
-        # the entire model is fine-tuned.
-
         ###
         #Already add [CLS] and [SEP]
         #101, 102
@@ -192,17 +155,6 @@ model = GPT2Model.from_pretrained('gpt2')
         if len(input_ids) > max_seq_length:
             input_ids = input_ids[:max_seq_length-1]+[102]
         segment_ids = [0] * len(input_ids)
-
-
-        '''
-        if task_n==2:
-            #"[SEP]"
-            input_ids += input_ids + [102]
-            #sentiment: word (Next sentence)
-            #segment_ids += [1] * (len(tokens_b) + 1)
-        '''
-
-        # The “Attention Mask” is simply an array of 1s and 0s indicating which tokens are padding and which aren’t (including special tokens)
 
         # The mask has 1 for real tokens and 0 for padding tokens. Only real
         # tokens are attended to.
@@ -252,8 +204,6 @@ model = GPT2Model.from_pretrained('gpt2')
 
 def main():
     parser = argparse.ArgumentParser()
-    ## Required parameters
-    ###############
     parser.add_argument("--data_dir",
                         default=None,
                         type=str,
@@ -362,8 +312,6 @@ def main():
     ###############
 
     args = parser.parse_args()
-    #print(args.do_train, args.do_eval)
-    #exit()
 
 
     processors = Processor_1
@@ -467,13 +415,11 @@ def main():
         print(x, mark)
         output_model_file = os.path.join(args.output_dir, x)
 
-        #model = BertForSequenceClassification.from_pretrained(args.pretrain_model, num_labels=num_labels, output_hidden_states=False, output_attentions=False, return_dict=True)
         model = BertForMaskedLMDomainTask.from_pretrained(args.pretrain_model, output_hidden_states=False, output_attentions=False, return_dict=True, num_labels=args.num_labels_task)
         model.load_state_dict(torch.load(output_model_file), strict=False)
         #strict False: ignore non-matching keys
         model.to(device)
 
-        #######################################
         param_optimizer = list(model.named_parameters())
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
         #no_decay = ['bias', 'LayerNorm.weight']
@@ -484,7 +430,6 @@ def main():
             {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
             ]
         optimizer = AdamW(optimizer_grouped_parameters, lr=args.learning_rate, eps=args.adam_epsilon)
-        #scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=int(t_total*0.1), num_training_steps=t_total)
         if args.fp16:
             try:
                 from apex import amp
@@ -499,7 +444,6 @@ def main():
         if n_gpu > 1:
             model = torch.nn.DataParallel(model)
 
-        # Distributed training (should be after apex fp16 initialization)
         if args.local_rank != -1:
             model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank],
                                                               output_device=args.local_rank,
@@ -507,11 +451,6 @@ def main():
         #######################################
 
 
-        #param_optimizer = [para[0] for para in model.named_parameters()]
-        #param_optimizer = [para for para in model.named_parameters()][-2]
-        #print(param_optimizer)
-
-        #0,mark==True:eval, 1,mark==False:test
         if mark:
             eval_features = dev
         else:
@@ -577,27 +516,10 @@ def main():
 
             if args.task == 1:
                 #loss, logits, hidden_states, attentions
-                '''
-                output = model(input_ids=input_ids, token_type_ids=None, attention_mask=attention_mask, labels=label_ids)
-                logits = output.logits
-                tmp_eval_loss = output.loss
-                '''
-                #
                 tmp_eval_loss, logits = model(input_ids_org=input_ids, sentence_label=label_ids, attention_mask=attention_mask, func="task_class")
-                #logits = output.logits
-                #tmp_eval_loss = output.loss
             elif args.task == 2:
                 #loss, logits, hidden_states, attentions
-                '''
-                output = model(input_ids=input_ids, token_type_ids=None, attention_mask=attention_mask, labels=label_ids)
-                logits = output.logits
-                tmp_eval_loss = output.loss
-                '''
-                #
                 tmp_eval_loss, logits = model(input_ids_org=input_ids, sentence_label=label_ids, attention_mask=attention_mask, func="task_class")
-                #exit()
-                #logits = output.logits
-                #tmp_eval_loss = output.loss
             else:
                 print("Wrong!!")
 
@@ -628,15 +550,11 @@ def main():
                 logger.info("  %s = %s", key, str(result[key]))
                 writer.write("%s = %s\n" % (key, str(result[key])))
 
-        #if mark and step > int(math.ceil(len(eval_examples)/args.eval_batch_size)):
         if mark:
             model_performace_dev[x] = eval_accuracy
         else:
             model_performace_test[x] = eval_accuracy
 
-    #################
-    #################
-    #####dev#########
     #0,mark==True:eval, 1,mark==False:test
     if args.choose_eval_test_both != 1:
         model_name_best=0
