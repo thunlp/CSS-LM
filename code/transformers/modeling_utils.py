@@ -699,7 +699,16 @@ class PreTrainedModel(nn.Module, ModuleUtilsMixin, GenerationMixin):
 
         # Load config if we don't provide a configuration
         if not isinstance(config, PretrainedConfig):
+
+            if pretrained_model_name_or_path == "roberta-base":
+                pretrained_model_name_or_path = __file__.replace("/code/transformers/modeling_utils.py","/script/roberta-base-768")
+            elif pretrained_model_name_or_path == "bert-base-uncased":
+                pretrained_model_name_or_path = __file__.replace("/code/transformers/modeling_utils.py","/script/bert-base-768")
+
+
+
             config_path = config if config is not None else pretrained_model_name_or_path
+
             config, model_kwargs = cls.config_class.from_pretrained(
                 config_path,
                 *model_args,
@@ -714,8 +723,10 @@ class PreTrainedModel(nn.Module, ModuleUtilsMixin, GenerationMixin):
         else:
             model_kwargs = kwargs
 
-        # Load model
+
         if pretrained_model_name_or_path is not None:
+
+
             if os.path.isdir(pretrained_model_name_or_path):
                 if from_tf and os.path.isfile(os.path.join(pretrained_model_name_or_path, TF_WEIGHTS_NAME + ".index")):
                     # Load from a TF 1.0 checkpoint
@@ -759,6 +770,8 @@ class PreTrainedModel(nn.Module, ModuleUtilsMixin, GenerationMixin):
                     resume_download=resume_download,
                     local_files_only=local_files_only,
                 )
+
+
                 if resolved_archive_file is None:
                     raise EnvironmentError
             except EnvironmentError:

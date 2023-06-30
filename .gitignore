@@ -9,9 +9,13 @@ script/output_*/
 script/retriver_*/
 script/roberta-base-768-*/
 script/bert-base-768-*/
+script/roberta-base-uncased-*/
+script/bert-base-*/
 
 script/bert-base-768/*
 script/roberta-base-768/*
+script/bert-base-uncased/*
+script/roberta-base/*
 data/opendomain_finetune_noword_10000/*
 data/openwebtext/*
 download/*

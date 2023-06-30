@@ -41,10 +41,6 @@ do
     ###
     N_times_1=$8
     N_times_2=$9
-    '''
-    N_times_1=3
-    N_times_2=3
-    '''
     ###
     LEARNING_RATE=2e-5
     #LEARNING_RATE=4e-5

@@ -17,6 +17,6 @@ unzip download.zip
 
 scp -r download/opendomain_finetune_noword_10000 data
 scp -r download/openwebtext data
-scp -r download/roberta-base-768 script
-scp -r download/bert-base-768 script
+scp -r download/roberta-base-uncased script
+scp -r download/bert-base script
 

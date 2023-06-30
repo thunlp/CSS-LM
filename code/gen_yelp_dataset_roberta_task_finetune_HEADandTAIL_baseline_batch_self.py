@@ -114,11 +114,15 @@ torch.manual_seed(seed)
 if n_gpu > 0:
     torch.cuda.manual_seed_all(seed)
 
+#dir_ = __file__.replace("code/gen_yelp_dataset_roberta_task_finetune_HEADandTAIL_baseline_batch_self.py","script/roberta-base-768")
+
 tokenizer = RobertaTokenizer.from_pretrained(model)
+#tokenizer = RobertaTokenizer.from_pretrained(dir_)
 
 # Prepare model
 model = RobertaForMaskedLMDomainTask.from_pretrained(model, output_hidden_states=True, return_dict=True, num_labels=num_labels)
 model.to(device)
+
 
 ##########################
 param_optimizer = list(model.named_parameters())

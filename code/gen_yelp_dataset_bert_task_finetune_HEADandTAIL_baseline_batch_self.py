@@ -32,7 +32,7 @@ local_rank = -1
 no_cuda = False
 seed = 42
 opt_level='O1'
-fp16=True
+fp16=False
 learning_rate=5e-5
 adam_epsilon=1e-8
 weight_decay=0.0
@@ -114,6 +114,7 @@ if n_gpu > 0:
     torch.cuda.manual_seed_all(seed)
 
 tokenizer = BertTokenizer.from_pretrained(model)
+
 
 # Prepare model
 model = BertForMaskedLMDomainTask.from_pretrained(model, output_hidden_states=True, return_dict=True, num_labels=num_labels)
