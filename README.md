@@ -67,13 +67,14 @@ In `run1.sh`, we have two kinds of backbone models (`BERT` and `RoBERTa`).
 - run_bert_${DATASET}_finetune.sh: Supervised Contrastive Fine-tuning (<b>SCF</b>)
 - run_bert_${DATASET}_finetune.sh: Semi-supervised Contrastive Pseudo Labeling Fine-tuning (<b>CSS-LM-ST</b>)
 
-`${DATASET}`: Can be semeval, sst5, scicite, aclintent, sciie, chemprot, and chemprot.
-`$gpu_0 $gpu_1 $gpu_2 $gpu_3`: You could assign the numbers of GPUs and gpu_ids that you need.
-`$N_1 $N_2 $N_3`: The number of annotated instances.
-`$N_times_1 $N_times_2`: The number of training epoches.
-`$batch_size`: Training batch size.
-`$max_length`: The max length of the input sentence.
-`$i_th`: Given 5 random seeds to train the models. Each `$i_th` indicates the different random seed.
+### Arguments
+- `${DATASET}`: Can be semeval, sst5, scicite, aclintent, sciie, chemprot, and chemprot.
+- `$gpu_0 $gpu_1 $gpu_2 $gpu_3`: You could assign the numbers of GPUs and gpu_ids that you need.
+- `$N_1 $N_2 $N_3`: The number of annotated instances.
+- `$N_times_1 $N_times_2`: The number of training epoches.
+- `$batch_size`: Training batch size.
+- `$max_length`: The max length of the input sentence.
+- `$i_th`: Given 5 random seeds to train the models. Each `$i_th` indicates the different random seed.
 
 ```bash
 for i_th in {1..5};
