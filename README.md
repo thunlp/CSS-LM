@@ -54,6 +54,24 @@ cd script
 bash run1.sh
 ```
 
+```bash
+for i_th in {1..5};
+do
+    #RoBERTa-based Model
+    bash run_${DATASET}_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_${DATASET}_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_${DATASET}_st.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_${DATASET}_sscl.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+
+    #BERT-based Moodel
+    bash run_bert_${DATASET}_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_bert_${DATASET}_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_bert_${DATASET}_st.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_bert_${DATASET}_sscl.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+done
+```
+
+
 In `run1.sh`, we have two kinds of backbone models (`BERT` and `RoBERTa`). 
 ### RoBERTa-based 
 - run_${DATASET}_finetune.sh: Few-shot Fine-tuning (<b>Standard</b>)
@@ -76,22 +94,6 @@ In `run1.sh`, we have two kinds of backbone models (`BERT` and `RoBERTa`).
 - `$max_length`: The max length of the input sentence.
 - `$i_th`: Given 5 random seeds to train the models. Each `$i_th` indicates the different random seed.
 
-```bash
-for i_th in {1..5};
-do
-    #RoBERTa-based Model
-    bash run_${DATASET}_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
-    bash run_${DATASET}_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
-    bash run_${DATASET}_st.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
-    bash run_${DATASET}_sscl.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
-
-    #BERT-based Moodel
-    bash run_bert_${DATASET}_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
-    bash run_bert_${DATASET}_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
-    bash run_bert_${DATASET}_st.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
-    bash run_bert_${DATASET}_sscl.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
-done
-```
 
 
 <!--
