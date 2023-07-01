@@ -8,30 +8,15 @@ gpu_6=6
 gpu_7=7
 
 N_1=16
-#N_1=8
-#N_1=32
-#N_1=all
-#N_1=30
 N_2=24
 N_3=32
 
-#N_times_1=23
-#N_times_2=23
-#N_times_1=2
-#N_times_2=2
-#N_times_1=8
-#N_times_2=8
-#N_times_1=12
-#N_times_2=12
 
 N_times_1=14
-#N_times_1=1
 N_times_2=14
-#N_times_2=1
 
 
 #All reduce to 16 retrieved instances
-
 batch_size=4
 max_length=100
 

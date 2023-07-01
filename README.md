@@ -34,9 +34,7 @@ pip install -v --disable-pip-version-check --no-cache-dir ./
 
 
 ## Prepare the data
-Download the open domain corpus (`openwebtext`
-) and backbone models (`roberta-base`,
-, `bert-base-uncased`) and move them to the corresponding directories.
+Download the open domain corpus (`openwebtext`) and backbone models (`roberta-base`, `bert-base-uncased`) and move them to the corresponding directories.
 ```bash
 wget https://cloud.tsinghua.edu.cn/f/690e78d324ee44068857/?dl=1
 mv 'index.html?dl=1' download.zip
@@ -50,6 +48,41 @@ scp -r download/bert-base-uncased script/bert-base-768
 <!-- scp -r download/opendomain_finetune_noword_10000 data-->
 
 ## Run the Experiments
+Excute 'script/run1.sh'.
+```bash
+cd script
+bash run1.sh
+```
+
+In `run1.sh`, we have two kinds of backbone models (`BERT` and `RoBERTa`). 
+- run_{$DATASET}_finetune.sh: Few-shot Fine-tuning
+- run_{$DATASET}_sscl_dt_k.sh: 
+- run_{$DATASET}_st.sh:
+- run_{$DATASET}_sscl.sh:
+
+- run_bert_{$DATASET}_finetune.sh:
+- run_bert_{$DATASET}_finetune.sh:
+- run_bert_{$DATASET}_finetune.sh:
+- run_bert_{$DATASET}_finetune.sh:
+
+```bash
+for i_th in {1..5};
+do
+    #RoBERTa-base Model
+    bash run_semeval_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_semeval_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_semeval_st.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_semeval_sscl.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+
+    #BERT-base Moodel
+    bash run_bert_semeval_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_bert_semeval_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_bert_semeval_st.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_bert_semeval_sscl.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+done
+```
+
+
 
 ## Run CSS-LM
 
