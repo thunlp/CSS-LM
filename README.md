@@ -97,6 +97,10 @@ In `run1.sh`, we have two kinds of backbone models (`BERT` and `RoBERTa`).
 
 
 
+## Semi-supervised Contrastive Fine-tuning (<b>CSS-LM</b>)
+
+The CSS-LM (`run_${DATASET}_sscl_dt_k.sh` and `run_bert_${DATASET}_sscl_dt_k.sh`) is our main method; thus, we further introduce the whole pipeline of it. We utilize `run_semeval_sscl_dt_k.sh` as the example.
+
 <!--
 ## Run CSS-LM
 
