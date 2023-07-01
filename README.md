@@ -56,16 +56,16 @@ bash run1.sh
 
 In `run1.sh`, we have two kinds of backbone models (`BERT` and `RoBERTa`). 
 ### RoBERTa-based 
-- run_${DATASET}_finetune.sh: Few-shot Fine-tuning (Called <b>Standard</b> in the paper.)
-- run_${DATASET}_sscl_dt_k.sh: Semi-supervised Contrastive Fine-tuning (Called <b>CSS-LM</b> in the paper.)
-- run_${DATASET}_st.sh: Supervised Contrastive Fine-tuning (Called <b>SCF</b> in the paper.) 
-- run_${DATASET}_sscl.sh: Semi-supervised Contrastive Pseudo Labeling Fine-tuning (Called <b>CSS-LM-ST</b> in the paper.)
+- run_${DATASET}_finetune.sh: Few-shot Fine-tuning (<b>Standard</b>)
+- run_${DATASET}_sscl_dt_k.sh: Semi-supervised Contrastive Fine-tuning (<b>CSS-LM</b>)
+- run_${DATASET}_st.sh: Supervised Contrastive Fine-tuning (<b>SCF</b>) 
+- run_${DATASET}_sscl.sh: Semi-supervised Contrastive Pseudo Labeling Fine-tuning (<b>CSS-LM-ST</b>)
 
 ### BERT-based 
-- run_bert_${DATASET}_finetune.sh: Few-shot Fine-tuning (Called <b>Standard</b> in the paper.)
-- run_bert_${DATASET}_finetune.sh: Semi-supervised Contrastive Fine-tuning (Called <b>CSS-LM</b> in the paper.)
-- run_bert_${DATASET}_finetune.sh: Supervised Contrastive Fine-tuning (Called <b>SCF</b> in the paper.)
-- run_bert_${DATASET}_finetune.sh: Semi-supervised Contrastive Pseudo Labeling Fine-tuning (Called <b>CSS-LM-ST</b> in the paper.)
+- run_bert_${DATASET}_finetune.sh: Few-shot Fine-tuning (<b>Standard</b>)
+- run_bert_${DATASET}_finetune.sh: Semi-supervised Contrastive Fine-tuning (<b>CSS-LM</b>)
+- run_bert_${DATASET}_finetune.sh: Supervised Contrastive Fine-tuning (<b>SCF</b>)
+- run_bert_${DATASET}_finetune.sh: Semi-supervised Contrastive Pseudo Labeling Fine-tuning (<b>CSS-LM-ST</b>)
 
 `${DATASET}`: Can be semeval, sst5, scicite, aclintent, sciie, chemprot, and chemprot.
 `$gpu_0 $gpu_1 $gpu_2 $gpu_3`: You could assign the numbers of GPUs and gpu_ids that you need.
