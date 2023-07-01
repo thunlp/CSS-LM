@@ -54,6 +54,7 @@ cd script
 bash run1.sh
 ```
 
+The run1.sh script.
 ```bash
 for i_th in {1..5};
 do
