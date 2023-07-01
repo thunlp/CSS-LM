@@ -47,6 +47,30 @@ scp -r download/bert-base-uncased script/bert-base-768
 ```
 <!-- scp -r download/opendomain_finetune_noword_10000 data-->
 
+
+## Semi-supervised Contrastive Fine-tuning (<b>CSS-LM</b>)
+
+The CSS-LM (`run_${DATASET}_sscl_dt_k.sh` and `run_bert_${DATASET}_sscl_dt_k.sh`) is our main method. Users can run the the example of `script/semeval_example.sh` 
+
+```
+for i_th in {1..5};
+do
+    #RoBERTa-base Model
+    bash run_semeval_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_semeval_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+
+    #BERT-base Moodel
+    bash run_bert_semeval_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+    bash run_bert_semeval_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
+
+done
+```
+We will introduce the the whole training pipeline and provide the detail of arguments in the following parts.
+
+
+
+
+
 ## Run the All Experiments
 Excute 'script/run1.sh'.
 ```bash
@@ -97,20 +121,7 @@ In `run1.sh`, we have two kinds of backbone models (`BERT` and `RoBERTa`).
 
 
 
-## Semi-supervised Contrastive Fine-tuning (<b>CSS-LM</b>)
 
-The CSS-LM (`run_${DATASET}_sscl_dt_k.sh` and `run_bert_${DATASET}_sscl_dt_k.sh`) is our main method; thus, we further introduce the whole pipeline of it. We utilize `run_semeval_sscl_dt_k.sh` as the example.
-
-<!--
-## Run CSS-LM
-
-By executing run1.sh, the code will automatically create folders for the corresponding datasets to save the checkpoints.
-```
-cd script
-bash run1.sh
-```
-(You can refer to run1.sh for more details.)
--->
 
 
 
