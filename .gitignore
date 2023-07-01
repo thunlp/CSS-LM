@@ -25,3 +25,5 @@ data/opendomain_finetune_*
 apex
 download
 download.zip
+
+g.sh

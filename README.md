@@ -55,26 +55,29 @@ bash run1.sh
 ```
 
 In `run1.sh`, we have two kinds of backbone models (`BERT` and `RoBERTa`). 
-- run_{$DATASET}_finetune.sh: Few-shot Fine-tuning
-- run_{$DATASET}_sscl_dt_k.sh: 
-- run_{$DATASET}_st.sh:
-- run_{$DATASET}_sscl.sh:
+### RoBERTa-based 
+- run_{$DATASET}_finetune.sh: Few-shot Fine-tuning (Called <b>Standard</b> in the paper.)
+- run_{$DATASET}_sscl_dt_k.sh: Semi-supervised Contrastive Fine-tuning (Called <b>CSS-LM</b> in the paper.)
+- run_{$DATASET}_st.sh: Supervised Contrastive Fine-tuning (Called <b>SCF</b> in the paper.) 
+- run_{$DATASET}_sscl.sh: Semi-supervised Contrastive Pseudo Labeling Fine-tuning (Called <b>CSS-LM-ST</b> in the paper.)
 
-- run_bert_{$DATASET}_finetune.sh:
-- run_bert_{$DATASET}_finetune.sh:
-- run_bert_{$DATASET}_finetune.sh:
-- run_bert_{$DATASET}_finetune.sh:
+### BERT-based 
+- run_bert_{$DATASET}_finetune.sh: Few-shot Fine-tuning (Called <b>Standard</b> in the paper.)
+- run_bert_{$DATASET}_finetune.sh: Semi-supervised Contrastive Fine-tuning (Called <b>CSS-LM</b> in the paper.)
+- run_bert_{$DATASET}_finetune.sh: Supervised Contrastive Fine-tuning (Called <b>SCF</b> in the paper.)
+- run_bert_{$DATASET}_finetune.sh: Semi-supervised Contrastive Pseudo Labeling Fine-tuning (Called <b>CSS-LM-ST</b> in the paper.)
+
 
 ```bash
 for i_th in {1..5};
 do
-    #RoBERTa-base Model
+    #RoBERTa-based Model
     bash run_semeval_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
     bash run_semeval_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
     bash run_semeval_st.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
     bash run_semeval_sscl.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
 
-    #BERT-base Moodel
+    #BERT-based Moodel
     bash run_bert_semeval_finetune.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
     bash run_bert_semeval_sscl_dt_k.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
     bash run_bert_semeval_st.sh $gpu_0 $gpu_1 $gpu_2 $gpu_3 $N_1 $N_2 $N_3 $N_times_1 $N_times_2 $batch_size $max_length $i_th
